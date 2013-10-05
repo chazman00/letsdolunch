@@ -1,0 +1,11 @@
+{
+  "name": "myProject",
+  "version": "0.0.1",
+  "dependencies": {
+    "steroids-js": "2.7.x"
+  },
+  "_source": "C:\\Users\\chazman00\\ldl\\config\\bower.json",
+  "_target": "*",
+  "_originalSource": "C:\\Users\\chazman00\\ldl\\config\\bower.json",
+  "_direct": true
+}
