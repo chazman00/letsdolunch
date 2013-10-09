@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf8">
-  <title>Let's Do Lunch</title>
+  <title>Contacts</title>
 
   <link rel="stylesheet" href="vendor/topcoat/css/topcoat-mobile-light.css" />
   <link rel="stylesheet" href="stylesheets/application.css" />
@@ -19,48 +19,26 @@
 
   <script src="javascripts/application.js"></script>
 
-<script type="text/javascript" charset="utf-8">
+  <script type="text/javascript" charset="utf-8">
 
     // Wait for Cordova to load
     //
-    document.addEventListener("deviceready", onDeviceReady, false);
+    document.addEventListener("deviceready", onDeviceReady, false);	
 
-    // Cordova is ready
-    //
-    function onDeviceReady() {
-        // find all contacts with 'Bob' in any name field
-        var options = new ContactFindOptions();
-        options.filter="Peter"; 
-        var fields = ["displayName", "name"];
-        navigator.contacts.find(fields, onSuccess, onError, options);
-    }
-
-    // onSuccess: Get a snapshot of the current contacts
-    //
-    function onSuccess(contacts) {
-        for (var i=0; i<contacts.length; i++) {
-			var div = document.createElement("div");
-			div.setAttribute("id","contact"+i);
-			var name = "";
-			for (var j=0; j<contacts[i].name.length; j++) { name = name + contacts[i].name[j] + " "; }
-            var txt = document.createTextNode("Display Name: " + contacts[i].displayName + ", Name: " + name);
-			div.appendChild(txt);
-			var body = document.getElementById("htmlBody");
-			body.appendChild(div);
-        }
-    }
-
-    // onError: Failed to get the contacts
-    //
-    function onError(contactError) {
-        alert('onError!');
-    }
-
-    </script>
+	onload = function()
+	{
+		var elm = document.getElementById("contactSearch");
+		elm.onchange = new Function("textChanged(this)");
+	}
+    
+   </script>
 </head>
-<body style="background:#000;" id="htmlBody">
+<body  id="htmlBody"><h3>Find Contacts</h3>
+	<div id="contactsSearch">		
+		<input type="search"  value="" placeholder="search" class="topcoat-search-input--large" id="contactSearch"/>
+	</div>
   <div class="content-padded">
-    <class="topcoat-button center full" ontouchend="steroids.modal.hide()">Hide currently open modal</a>
+    <a class="topcoat-button--large--cta center" ontouchend="steroids.modal.hide()">Submit with Selected Contacts</a>
   </div>
 </body>
 </html>
