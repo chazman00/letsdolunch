@@ -21,11 +21,11 @@
   <script src="javascripts/application.js"></script>
 </head>
 <body>
-  <div class="content-padded">
+
 
     <div id="datetime">
 		<h3>Select the range of time you are available:</h3>
-		<div id="date"></div>
+		<div id="date"><a class="topcoat-button center full" ontouchend="showModal('locations.html')">Add Locations</a></div>
 		<div id="starttime"></div>
 		<div id="endtime"></div>
 	</div>
@@ -33,15 +33,15 @@
 	
     <div id="attendees">
 		<h3>Add Friends/Associates:</h3>
-		<div id="searchcontacts"><a href="contacts.html">Add Contacts</a></div>
+		<div id="searchcontacts"><a class="topcoat-button--cta center full" ontouchend="showModal('contacts.html')">Add Contacts</a></div>
 		<div id="selectedcontacts"></div>		
 	</div>
 
 	
     <div id="locations">
-		<h3>Add Friends/Associates:</h3>
-		<div id="searchcontacts"></div>
-		<div id="selectedcontacts"></div>		
+		<h3>Locations:</h3>
+		<div id="searchcontacts"><a class="topcoat-button center full" ontouchend="showModal('locations.html')">Add Locations</a></div>
+		<div id="selectedcontacts"><a class="topcoat-button center full" ontouchend="previewDolanImage()">Preview dolan.png</a></div>		
 	</div>
 
 	

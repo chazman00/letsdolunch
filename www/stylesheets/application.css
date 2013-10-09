@@ -10,3 +10,9 @@ input {
 .content-padded {
   padding: 10px;
 }
+
+  #myImage {
+    width: 300px;
+    margin: auto;
+    display: block;
+  }
