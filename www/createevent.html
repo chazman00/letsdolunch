@@ -5,27 +5,46 @@
   <title>Create Event</title>
 
   <link rel="stylesheet" href="vendor/topcoat/css/topcoat-mobile-light.css" />
-  <link rel="stylesheet" href="stylesheets/application.css" />
+  <link rel="stylesheet" href="stylesheets/bootstrap.css" />
 
   <script src="javascripts/onerror.js"></script>
   <script src="javascripts/console.log.js"></script>
 
-  <!--	
-  <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
-  <script src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
-  -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
   <!-- cordova.js is served from localhost to ensure the correct version -->
   <script src="http://localhost/appgyver/cordova.js"></script>
   <script src="components/steroids-js/steroids.js"></script>
 
   <script src="javascripts/application.js"></script>
+  
+  
+  <script type="text/javascript" >
+	function receiveMessage(event)
+	{
+	  // Do we trust the sender of this message?  (might be
+	  // different from what we originally opened, for example).
+	  //if (event.origin !== "http://example.org")
+	  //   return;
+
+	  //var elem = document.querySelector();
+	  var newDiv = $('<div>');
+	  newDiv.addClass("list-group-item")
+			.text(document.createTextNode(event.data.contact));
+	  $("#selectedcontacts").append(newDiv);
+		//elem.textContent ='received response:  ' + event.data;
+	}
+	window.addEventListener("message", receiveMessage, false);
+
+  
+  </script>
 </head>
-<body>
+<body onload="ldlonload()">
 
 
     <div id="datetime">
 		<h3>Select the range of time you are available:</h3>
-		<div id="date"><a class="topcoat-button--cta center" ontouchend="showModal('locations.html')">Time</a></div>
+		<div id="date"><a class="topcoat-button--cta center" ontouchend="showModal('timerange.html')">Time</a></div>
 		<div id="starttime"></div>
 		<div id="endtime"></div>
 	</div>
@@ -46,11 +65,12 @@
 
 	
     <div id="comment"><br/><br/></div>
-
+	
+	 <div id="datadiv" ></div>
 	
     <div id="actions">
 		<div id="cancel"><a class="topcoat-button--large center" href="index.html">Cancel</a></div>
-		<div id="schedule"><a class="topcoat-button--large--cta center" href="index.html">Schedule</a></div>		
+		<div id="schedule"><a class="topcoat-button--large--cta center" ontouchend="scheduleEvent()">Schedule</a></div>		
 	</div>
 
 
