@@ -1,4 +1,5 @@
 	
+steroids.view.navigationBar.show("Let's Do Lunch");
 
 function ldlonload() {
 	StackMob.init({
@@ -58,12 +59,12 @@ function createEvent() {
 
 }
 
-
+*/
 function scheduleEvent() {
 	//createEvent();
 	window.location = "index.html";
 }
-*/
+
 
 function showModal(modal) {
   var webView = new steroids.views.WebView(modal);
@@ -116,14 +117,14 @@ function onDeviceReady() {
 		*/
 		var searchDiv = document.getElementById("contactsSearch");
 		var divCont = document.createElement("div");
-		divCont.setAttribute("class","topcoat-list__container");
+		//divCont.setAttribute("class","topcoat-list__container");
 		var list = document.createElement("ul");
-		list.setAttribute("class","topcoat-list");	
+		//list.setAttribute("class","topcoat-list");	
 		searchDiv.appendChild(divCont);
 		divCont.appendChild(list);
         for (var i=0; i<contacts.length; i++) {					
 			var listItem = document.createElement("li");
-			listItem.setAttribute("class","topcoat-list__item");		
+			//listItem.setAttribute("class","topcoat-list__item");		
 			listItem.setAttribute("id","contact"+i);	
 			//listItem.setAttribute("ontouchend","submitContacts('this')");
             var txt = document.createTextNode(contacts[i].name.formatted);

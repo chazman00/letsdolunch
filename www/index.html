@@ -4,8 +4,8 @@
   <meta charset="utf8">
   <title>Let's Do Lunch</title>
 
-  <link rel="stylesheet" href="vendor/topcoat/css/topcoat-mobile-light.css" />
   <link rel="stylesheet" href="stylesheets/bootstrap.css" />
+  <link rel="stylesheet" href="stylesheets/style.css" />
 
   <script src="javascripts/onerror.js"></script>
   <script src="javascripts/console.log.js"></script>
@@ -18,14 +18,17 @@
   <script src="components/steroids-js/steroids.js"></script>
 
   <script src="javascripts/application.js"></script>
-
+  
+  <script type="text/javascript">
+	steroids.view.navigationBar.show("Let's Do Lunch");
+	var navBarVisible = true;
+  </script>
 </head>
 <body>
-  <div class="content-padded">
+  <div>
 
-    <h1>Let's Do Lunch</h1>
 
-    <div><a class="topcoat-button--large--cta center" href="createevent.html">Create an Event</a></div>
+    <div><a class="btn-primary call-to-action" href="createevent.html">Create an Event</a></div>
 
 
   </div>

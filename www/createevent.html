@@ -4,8 +4,8 @@
   <meta charset="utf8">
   <title>Create Event</title>
 
-  <link rel="stylesheet" href="vendor/topcoat/css/topcoat-mobile-light.css" />
   <link rel="stylesheet" href="stylesheets/bootstrap.css" />
+  <link rel="stylesheet" href="stylesheets/style.css" />
 
   <script src="javascripts/onerror.js"></script>
   <script src="javascripts/console.log.js"></script>
@@ -20,6 +20,24 @@
   
   
   <script type="text/javascript" >
+  
+	steroids.view.navigationBar.show("Create An Event");
+	var navBarVisible = true;
+	
+	var cancelButton = new steroids.buttons.NavigationBarButton();
+	cancelButton.title = "Cancel";
+	
+	cancelButton.onTap = function() {
+	  window.location = "index.html";
+	};
+	
+	steroids.view.navigationBar.setButtons({
+	  left: [cancelButton]
+	});
+	
+	
+		
+	
 	function receiveMessage(event)
 	{
 	  // Do we trust the sender of this message?  (might be
@@ -29,7 +47,8 @@
 
 	  //var elem = document.querySelector();
 	  var newDiv = $('<div>');
-	  newDiv.addClass("list-group-item")
+	  newDiv
+	  //.addClass("list-group-item")
 			.text(document.createTextNode(event.data.contact));
 	  $("#selectedcontacts").append(newDiv);
 		//elem.textContent ='received response:  ' + event.data;
@@ -44,7 +63,7 @@
 
     <div id="datetime">
 		<h3>Select the range of time you are available:</h3>
-		<div id="date"><a class="topcoat-button--cta center" ontouchend="showModal('timerange.html')">Time</a></div>
+		<div id="date"><a class="btn-primary" ontouchend="showModal('timerange.html')">Time</a></div>
 		<div id="starttime"></div>
 		<div id="endtime"></div>
 	</div>
@@ -52,14 +71,14 @@
 	
     <div id="attendees">
 		<h3>Add Friends/Associates:</h3>
-		<div id="searchcontacts"><a class="topcoat-button--cta center" ontouchend="showModal('contacts.html')">Add Contacts</a></div>
+		<div id="searchcontacts"><a class="btn-primary" ontouchend="showModal('contacts.html')">Add Contacts</a></div>
 		<div id="selectedcontacts"></div>		
 	</div>
 
 	
     <div id="locations">
 		<h3>Locations:</h3>
-		<div id="searchcontacts"><a class="topcoat-button--cta center" ontouchend="showModal('locations.html')">Add Locations</a></div>
+		<div id="searchcontacts"><a class="btn-primary" ontouchend="showModal('locations.html')">Add Locations</a></div>
 		<div id="selectedcontacts"></div>		
 	</div>
 
@@ -69,8 +88,7 @@
 	 <div id="datadiv" ></div>
 	
     <div id="actions">
-		<div id="cancel"><a class="topcoat-button--large center" href="index.html">Cancel</a></div>
-		<div id="schedule"><a class="topcoat-button--large--cta center" ontouchend="scheduleEvent()">Schedule</a></div>		
+		<div id="schedule"><a class="btn-primary call-to-action" ontouchend="scheduleEvent()">Schedule</a></div>		
 	</div>
 
 
