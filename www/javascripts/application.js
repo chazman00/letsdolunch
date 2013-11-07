@@ -1,5 +1,23 @@
+
+function Contact(cordovaContact) {	
+	alert(cordovaContact);
+	this.deviceID = cordovaContact.id;
+	this.salutation = cordovaContact.name.honorificPrefix;
+	this.first = cordovaContact.name.givenName;
+	this.last = cordovaContact.name.familyName;
+	if (cordovaContact.emails) {
+		this.email = cordovaContact.emails[0].value;
+	}
+	if (cordovaContact.phoneNumbers) {
+		this.smsNumber = cordovaContact.phoneNumbers[0].value;
+	}
+	if (cordovaContact.photos) {
+		this.photo = cordovaContact.photos[0].value;
+	}
+	this.address = cordovaContact.addresses[0].formatted;
+	//this.User = User;
 	
-steroids.view.navigationBar.show("Let's Do Lunch");
+}
 
 function ldlonload() {
 	StackMob.init({
@@ -74,67 +92,68 @@ function showModal(modal) {
 }
 
 function onDeviceReady() {
-        // find all contacts with 'Bob' in any name field
-        var options = new ContactFindOptions();
-        options.filter="Rachel"; 
-		//options.multiple=true;
-        var fields = ["displayName", "name", "nickname", "emails"];
-        navigator.contacts.find(fields, onContactSuccess, onContactError, options);
-    }
 	
-	function textChanged(value)
-	{
-		var options = new ContactFindOptions();
-        options.filter=value; 
-		options.multiple=true;
-        var fields = ["displayName", "name", "nickname", "emails"];
-        //navigator.contacts.find(fields, onContactSuccess, onContactError, options);
-	}
+	
+        // find all contacts with 'Bob' in any name field
+	$("#autocomplete").on( "listviewbeforefilter", function (  qq, data ) {
+		var $ul = $( this ),
+			$input = $( data.input ),
+			value = $input.val(),
+			html = "";
+			
+		$ul.html( "" );
+		if ( value && value.length > 2 ) {
+			var options = new ContactFindOptions();
+			options.filter=value ; 
+			options.multiple=true;
+			var fields = ["displayName", "name", "nickname", "emails"];
+			navigator.contacts.find(fields, onContactSuccess, onContactError, options);
+
+		}
+	});
+}
+
+
+
 
     // onSuccess: Get a snapshot of the current contacts
     //
-    function onContactSuccess(contacts) {
+    function onContactSuccess(contacts) { 
 		var html = "";
 		var ul = $( "#autocomplete" );
-		$.each( contacts, function ( i,contact ) {
-			var emailHTML = "";
-			$.each(contact.emails, function (j, email) {
-				emailHTML += email.value + "<br/>";
-			});
-			html += "<li><a href='#'><h2>" +contact.name.formatted + "</h2><p>"+ emailHTML +"</p></a></li>";
+		$.each( contacts, function ( i,cordContact ) {
+			var cont = new Contact(cordContact);			
+			var email = "";
+			if (cordContact.emails) {
+				email = cordContact.emails[0].value
+			}
+			html += "<li id='selectedContact"+i+"'><a ontouchend='selectContact(this)'><h2>" +cordContact.name.formatted + "</h2><p id='"+cordContact.id+"'>"+ email +"</p></a></li>";
 		});
 		ul.html( html );
 		ul.listview( "refresh" );
 		ul.trigger( "updatelayout");
-		
-		/*
-		
 
+			
+    }  
+	
+	function selectContact(element) {
+		// add contact to selected Div
 		
-		var searchDiv = document.getElementById("contactsSearch");
-		var divCont = document.createElement("div");
-		//divCont.setAttribute("class","topcoat-list__container");
-		var list = document.createElement("ul");
-		list.setAttribute("data-role","listview");	
-		searchDiv.appendChild(divCont);
-		divCont.appendChild(list);
-        for (var i=0; i<contacts.length; i++) {		
-			$("#contactsSearch").append("<li><a href='#'>" + contacts[i].name.formatted + "</a></li>");
+		$("#selected").append($(element).parent());
+		
+		//clear form
+		var ul = $("#autocomplete");
+		ul.html("");
+		ul.listview( "refresh" );
+		ul.trigger( "updatelayout");
+		// put focus on form
 			
-			var listItem = document.createElement("li");
-			listItem.setAttribute("class","topcoat-list__item");		
-			listItem.setAttribute("id","contact"+i);	
-			//listItem.setAttribute("ontouchend","submitContacts('this')");
-            var txt = document.createTextNode();
-			listItem.appendChild(txt);
-			list.appendChild(listItem);
-			*/
-			
-    }
+	}
+	
     
 	
-	function submitContacts(element) {
-		//var data = $("#datadiv");
+	function submitContacts() {
+		var data = $("#selected");
 		/*
 		jQuery.document(data, "contacts", $(function { 
 			var ids = new Object();
@@ -144,7 +163,8 @@ function onDeviceReady() {
 			return ids;
 			
 		})); */
-		var msg = {contact: $(element).text()};
+		
+		var msg =  $(data).html();
 		window.postMessage(msg, "*");
 		
 		steroids.modal.hide();

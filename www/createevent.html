@@ -21,6 +21,17 @@
   
   <script type="text/javascript" >
   
+	  // defining options
+	var options = {
+	  date: new Date(),
+	  mode: 'date'
+	};
+	// calling show() function with options and a result handler
+	//datePicker.show(options, function(date){
+	//  alert("date result " + date);  
+	//});
+
+  
 	steroids.view.navigationBar.show("Create An Event");
 	var navBarVisible = true;
 	
@@ -47,11 +58,9 @@
 
 	  //var elem = document.querySelector();
 	  var newDiv = $('<div>');
-	  newDiv
-	  //.addClass("list-group-item")
-			.text(document.createTextNode(event.data.contact));
+	  newDiv.append(event.data);
 	  $("#selectedcontacts").append(newDiv);
-		//elem.textContent ='received response:  ' + event.data;
+
 	}
 	window.addEventListener("message", receiveMessage, false);
 
@@ -62,23 +71,23 @@
 
 
     <div id="datetime">
-		<h3>Select the range of time you are available:</h3>
-		<div id="date"><a class="btn-primary" ontouchend="showModal('timerange.html')">Time</a></div>
+		<div>Step 1: When Can you Meet?</div>
+		<div id="date"><a class="btn" ontouchend="showModal('timerange.html')">Time</a></div>
 		<div id="starttime"></div>
 		<div id="endtime"></div>
 	</div>
 
 	
     <div id="attendees">
-		<h3>Add Friends/Associates:</h3>
-		<div id="searchcontacts"><a class="btn-primary" ontouchend="showModal('contacts.html')">Add Contacts</a></div>
+		<div>Step 2: Add Friends/Associates</div>
+		<div id="searchcontacts"><a class="btn" ontouchend="showModal('contacts.html')">Add Contacts</a></div>
 		<div id="selectedcontacts"></div>		
 	</div>
 
 	
     <div id="locations">
-		<h3>Locations:</h3>
-		<div id="searchcontacts"><a class="btn-primary" ontouchend="showModal('locations.html')">Add Locations</a></div>
+		<div>Step 3: Add Locations</div>
+		<div id="searchcontacts"><a class="btn" ontouchend="showModal('locations.html')">Add Locations</a></div>
 		<div id="selectedcontacts"></div>		
 	</div>
 
@@ -88,7 +97,7 @@
 	 <div id="datadiv" ></div>
 	
     <div id="actions">
-		<div id="schedule"><a class="btn-primary call-to-action" ontouchend="scheduleEvent()">Schedule</a></div>		
+		<div id="schedule"><a class="btn call-to-action" ontouchend="scheduleEvent()">Schedule</a></div>		
 	</div>
 
 
