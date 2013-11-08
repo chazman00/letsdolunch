@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>StackMob Data Test</title>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
+	<script type="text/javascript">
+		StackMob.init({
+			publicKey: "0d9e876e-1f32-4fb8-ab2f-b66f57e6ad78",
+			apiVersion: 0
+		});
+	</script>
+	<script type="text/javascript" src="javascripts/data.js"></script>
+	<script type="text/javascript">
+		var pageEvent;
+		
+		$(document).ready(function() {
+			$('#esubmit').click(function() {
+				var defaultDate = new Date();
+				var newEvent = new Event({
+					name: $('#ename').val(),
+					type: $('#etype').val(),
+					startdatetime: defaultDate,
+					enddatetime: new Date(defaultDate.setHours(defaultDate.getHours() + 1))
+				});
+				
+				console.debug(newEvent.get('startdatetime') + ' | ' + newEvent.get('enddatetime'));
+				
+				newEvent.create({
+					success: function(model, result, options) { console.debug('Event Created!'); },
+					error: function(model, result, options) { console.debug('Event Creation Failed.'); }
+				});
+			});
+			
+			$('#esearch').click(function() {
+				var q = new StackMob.Collection.Query();
+				q.equals('name', $('#ename').val())
+				
+				var searchResults = new Events();
+				searchResults.query(q, {
+					success: function(results) { 
+						if (results.length == 1) {
+							var result = results.models[0];
+							var startdate = new Date(result.get('startdatetime'));
+							var enddate = new Date(result.get('enddatetime'));
+							$('#edetail').text( result.get('event_id') + ' | ' + result.get('name') + ' | ' + result.get('type') + ' | ' + startdate.toLocaleDateString() + ':' + startdate.toLocaleTimeString() + ' | ' + enddate.toLocaleDateString() + ':' + enddate.toLocaleTimeString() );
+						}
+					},
+					error: function(e) { $('#edetail').text('Event Not Found.') }
+				});
+			});
+			
+			$('#eclear').click(function() {
+				var pageEvent = null;
+				$('#ename').val('');
+				$('#etype').val('Lunch');
+			});
+		});
+	</script>
+</head>
+<body>
+	<div>
+		<h1>Event</h1>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						Name:
+					</td>
+					<td>
+						<input id="ename" type="textbox" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Type:
+					</td>
+					<td>
+						<input id="etype" type="textbox" value="Lunch" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input id="esubmit" type="button" value="Create" />
+						<input id="esearch" type="button" value="Find" />
+						<input id="eclear" type="button" value="Clear" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div id="edetail"></div>
+	</div>
+	<div>
+		<h1>Contact</h1>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						Salutation:
+					</td>
+					<td>
+						<input id="cSal" type="textbox" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						First Name:
+					</td>
+					<td>
+						<input id="cFirst" type="textbox" value="" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Last Name:
+					</td>
+					<td>
+						<input id="cLast" type="textbox" value="" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Email:
+					</td>
+					<td>
+						<input id="cEmail" type="textbox" value="" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						<input id="csubmit" type="button" value="Add Contact" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
