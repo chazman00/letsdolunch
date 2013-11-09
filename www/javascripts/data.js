@@ -10,6 +10,10 @@ var Contact = StackMob.Model.extend({
 	schemaName: 'contact'
 });
 
+var Contacts = StackMob.Collection.extend({
+	model: Contact
+});
+
 var Location = StackMob.Model.extend({
 	schemaName: 'location'
 });

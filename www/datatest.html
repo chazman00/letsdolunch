@@ -20,33 +20,39 @@
 				var newEvent = new Event({
 					name: $('#ename').val(),
 					type: $('#etype').val(),
-					startdatetime: defaultDate,
-					enddatetime: new Date(defaultDate.setHours(defaultDate.getHours() + 1))
+					startdatetime: defaultDate.getTime(),
+					enddatetime: defaultDate.setHours(defaultDate.getHours() + 1),
+					sm_owner: 'RichTest'
 				});
 				
 				console.debug(newEvent.get('startdatetime') + ' | ' + newEvent.get('enddatetime'));
 				
 				newEvent.create({
-					success: function(model, result, options) { console.debug('Event Created!'); },
+					success: function(model, result, options) { 
+						console.debug('Event Created!'); 
+						pageEvent = model; 
+					},
 					error: function(model, result, options) { console.debug('Event Creation Failed.'); }
 				});
 			});
 			
 			$('#esearch').click(function() {
 				var q = new StackMob.Collection.Query();
-				q.equals('name', $('#ename').val())
+				q.equals('name', $('#ename').val());
+				q.setExpand(2);
 				
 				var searchResults = new Events();
 				searchResults.query(q, {
 					success: function(results) { 
 						if (results.length == 1) {
-							var result = results.models[0];
-							var startdate = new Date(result.get('startdatetime'));
-							var enddate = new Date(result.get('enddatetime'));
-							$('#edetail').text( result.get('event_id') + ' | ' + result.get('name') + ' | ' + result.get('type') + ' | ' + startdate.toLocaleDateString() + ':' + startdate.toLocaleTimeString() + ' | ' + enddate.toLocaleDateString() + ':' + enddate.toLocaleTimeString() );
+							pageEvent = results.models[0];
+							var startdate = new Date(pageEvent.get('startdatetime'));
+							var enddate = new Date(pageEvent.get('enddatetime'));
+							$('#edetail').text(JSON.stringify(pageEvent));
+							//$('#edetail').text( pageEvent.get('event_id') + ' | ' + pageEvent.get('name') + ' | ' + pageEvent.get('type') + ' | ' + startdate.toLocaleDateString() + ':' + startdate.toLocaleTimeString() + ' | ' + enddate.toLocaleDateString() + ':' + enddate.toLocaleTimeString() + ' | ' + ((pageEvent.contacts) ? pageEvent.contacts.toJSON() : 'no contacts') );
 						}
 					},
-					error: function(e) { $('#edetail').text('Event Not Found.') }
+					error: function(e) { $('#edetail').text('Event Not Found.'); }
 				});
 			});
 			
@@ -54,6 +60,25 @@
 				var pageEvent = null;
 				$('#ename').val('');
 				$('#etype').val('Lunch');
+			});
+			
+			//Contact
+			$('#csubmit').click(function() {
+				var newContact = new Contact({
+					name: $('#cFirst').val() + ' ' + $('#cLast').val(),
+					salutation: $('#cSal').val(),
+					firstname: $('#cFirst').val(),
+					lastname: $('#cLast').val(),
+					email: $('#cEmail').val()
+				});
+				
+				newContact.create({
+					success: function(model, result, options) {
+						console.debug('Contact Created!');
+						pageEvent.appendAndSave('contacts', [model.get('contact_id')], { success: function() { console.debug('Added contact to event successfully.'); }, error: function() { console.debug('Failed to add contact to event.'); }});
+					},
+					error: function(model, result, options) { console.debug('Contact Creation Failed.'); }
+				});
 			});
 		});
 	</script>
