@@ -113,6 +113,121 @@ function onDeviceReady() {
 	});
 }
 
+var curPosition; 
+var onGeoSuccess = function(position) {
+	curPosition = position;
+	  /*alert('Latitude: '          + curPosition.coords.latitude          + '\n' +
+          'Longitude: '         + curPosition.coords.longitude         + '\n' +
+          'Altitude: '          + curPosition.coords.altitude          + '\n' +
+          'Accuracy: '          + curPosition.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + curPosition.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + curPosition.coords.heading           + '\n' +
+          'Speed: '             + curPosition.coords.speed             + '\n' +
+          'Timestamp: '         + curPosition.timestamp                + '\n'); */
+		
+};
+ 
+// onError Callback receives a PositionError object
+//
+function onError(error) {
+	alert('code: '    + error.code    + '\n' +
+		  'message: ' + error.message + '\n');
+}
+
+function onLocationReady() {
+	
+	
+        // find all contacts with 'Bob' in any name field
+	$("#autocomplete").on( "listviewbeforefilter", function (  qq, data ) {
+		var $ul = $( this ),
+			$input = $( data.input ),
+			value = $input.val(),
+			html = "";
+			
+		$ul.html( "" );
+		if ( value && value.length > 2 ) {
+					
+		console.log(value);	
+		var auth = { 
+				  //
+				  // Update with your auth tokens.
+				  //
+				  consumerKey: "xtbTqL89sPsFQw`bogFkxdw", 
+				  consumerSecret: "svxtxyaVSsaIvW4hPZzC5_MDFWY",
+				  accessToken: "5iMttq_dKNPjWLdYjNNJ6nhuKXe-KW3c",
+				  // This example is a proof of concept, for how to use the Yelp v2 API with javascript.
+				  // You wouldn't actually want to expose your access token secret like this in a real application.
+				  accessTokenSecret: "6T7eUEqzG5gGprmK7ra-QHZVhaY",
+				  serviceProvider: { 
+					signatureMethod: "HMAC-SHA1"
+				  }
+				};
+				
+				var accessor = {
+				  consumerSecret: auth.consumerSecret,
+				  tokenSecret: auth.accessTokenSecret
+				}; 
+				//alert(curPosition.coords.latitude);
+				//alert(curPosition.coords.longitude);
+				var lat = curPosition.coords.latitude.toString().substring(0,9);
+				var lon = curPosition.coords.longitude.toString().substring(0,10);
+				//alert("lat: "+lat+"\n long: "+lon);
+				var ll = lat+","+lon; //+","+curPosition.coords.accuracy;
+				console.log(ll);
+				parameters = [];
+				parameters.push(['term', value]);
+				parameters.push(['near', 'Harrisburg+PA']);
+				parameters.push(['callback', 'cb']);
+				parameters.push(['oauth_consumer_key', auth.consumerKey]);
+				parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
+				parameters.push(['oauth_token', auth.accessToken]);
+				parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
+
+				var message = { 
+				  'action': 'http://api.yelp.com/v2/search',
+				  'method': 'GET',
+				  'parameters': parameters 
+				};
+
+				OAuth.setTimestampAndNonce(message);
+				OAuth.SignatureMethod.sign(message, accessor);
+
+				var parameterMap = OAuth.getParameterMap(message.parameters);
+				parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature)
+				console.log(parameterMap);
+				
+				
+				$.ajax({
+				  'url': message.action,
+				  'data': parameterMap,
+				  'cache': true,
+				  'dataType': 'jsonp',
+				  'jsonpCallback': 'cb',
+				  'success': function(data, textStats, XMLHttpRequest) {
+					//append to autocomplete
+					var html = "";
+					var ul = $( "#autocomplete" );
+					alert(data);
+					$.each( data.businesses, function ( i,biz ) {		
+						alert(biz);
+						html += "<li id='selectedContact"+i+"'><img src='"+biz.image_url+"'/><h2>" +biz.name + "</h2><p id='"+biz.id+"'>"+ biz.location.display_address +"</p><p><img src='"+biz.rating_img_url_small+"'/></p></li>";
+					});
+					ul.html( html );
+					ul.listview( "refresh" );
+					ul.trigger( "updatelayout");
+				  }
+				});
+			
+			
+
+
+			
+
+		}
+	});
+}
+
+
 
 
 
