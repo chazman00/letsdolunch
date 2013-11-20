@@ -16,6 +16,7 @@
   <script src="http://localhost/appgyver/cordova.js"></script>
   <script src="components/steroids-js/steroids.js"></script>
 
+  <script src="javascripts/data.js"></script>
   <script src="javascripts/application.js"></script>
   
   
@@ -58,7 +59,15 @@
 
 	  //var elem = document.querySelector();
 	  var newDiv = $('<div>');
-	  newDiv.append(event.data);
+	  var html="";
+	  var contacts = (event.data)? JSON.parse(event.data): new Array();
+	  alert(contacts);
+	  $.each(contacts, function ( i,contact ) {	
+			html += "<div id='selectedContact"+i+"'><img src='"+contact.photo+"'/><h2>" +contact.name + "</h2><p id='"+contact.phoneID+"'>"+ contact.email +"</p></div></br>";
+		});
+	  
+	  
+	  newDiv.append(html);
 	  $("#selectedcontacts").append(newDiv);
 
 	}
