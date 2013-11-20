@@ -61,9 +61,9 @@
 	  var newDiv = $('<div>');
 	  var html="";
 	  var contacts = (event.data)? JSON.parse(event.data): new Array();
-	  alert(contacts);
+	  
 	  $.each(contacts, function ( i,contact ) {	
-			html += "<div id='selectedContact"+i+"'><img src='"+contact.photo+"'/><h2>" +contact.name + "</h2><p id='"+contact.phoneID+"'>"+ contact.email +"</p></div></br>";
+			html += "<div id='selectedContact"+i+"'><img src='"+contact.id.photo+"'/><h2>" +contact.id.name + "</h2><p id='"+contact.id.phoneID+"'>"+ contact.id.email +"</p></div></br>";
 		});
 	  
 	  
