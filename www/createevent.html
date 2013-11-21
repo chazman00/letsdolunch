@@ -60,16 +60,27 @@
 	  //var elem = document.querySelector();
 	  var newDiv = $('<div>');
 	  var html="";
-	  var contacts = (event.data)? JSON.parse(event.data): new Array();
-	  
-	  $.each(contacts, function ( i,contact ) {	
-			html += "<div id='selectedContact"+i+"'><img src='"+contact.id.photo+"'/><h2>" +contact.id.name + "</h2><p id='"+contact.id.phoneID+"'>"+ contact.id.email +"</p></div></br>";
-		});
-	  
-	  
-	  newDiv.append(html);
-	  $("#selectedcontacts").append(newDiv);
-
+	  if (event.data.contacts) {
+		  var contacts = JSON.parse(event.data.contacts);
+		  
+		  $.each(contacts, function ( i,contact ) {	
+				html += "<div id='selectedContact"+i+"'><img src='"+contact.id.photo+"'/><h2>" +contact.id.name + "</h2><p id='"+contact.id.phoneID+"'>"+ contact.id.email +"</p></div></br>";
+			});
+		  
+		  
+		  newDiv.append(html);
+		  $("#selectedcontacts").append(newDiv);
+	  } else if (event.data.locations) {
+		  var locations = JSON.parse(event.data.locations);
+		  
+		  $.each(locations, function ( i,location ) {	
+				html += "<div id='selectedLocation"+i+"'><img src='"+location.id.photo+"'/><h2>" +location.id.name + "</h2><p id='"+location.id.yelpID+"'>"+ location.id.address +"</p></div></br>";
+			});
+		  
+		  
+		  newDiv.append(html);
+		  $("#selectedlocations").append(newDiv);
+	  }
 	}
 	window.addEventListener("message", receiveMessage, false);
 
@@ -81,9 +92,9 @@
 
     <div id="datetime">
 		<div>Step 1: When Can you Meet?</div>
-		<div id="date"><a class="btn" ontouchend="showModal('timerange.html')">Time</a></div>
-		<div id="starttime"></div>
-		<div id="endtime"></div>
+		<div id="date"><input type="date" name="startdate" value="javascript:today()"/>
+		<div id="starttime">Start Time:<input type="time" name="starttime" /></div>
+		<div id="endtime">End Time: <input type="date" name="enddate"/><input type="time" name="endtime" /></div>
 	</div>
 
 	
@@ -97,7 +108,7 @@
     <div id="locations">
 		<div>Step 3: Add Locations</div>
 		<div id="searchcontacts"><a class="btn" ontouchend="showModal('locations.html')">Add Locations</a></div>
-		<div id="selectedcontacts"></div>		
+		<div id="selectedlocations"></div>		
 	</div>
 
 	

@@ -2,8 +2,12 @@
 var curPosition; 
 // The list returned from the phone of cordova contacts
 var cordovaContacts=new Array();
+// The list returned from the phone of cordova contacts
+var yelpResults=new Array();
 // The list of contacts for the event (to pass back to createevent.html)
 var ldlContacts=new Array();
+// The list of contacts for the event (to pass back to createevent.html)
+var ldlLocations=new Array();
 
 function Contact(cordovaContact) {	
 	alert(cordovaContact);
@@ -150,7 +154,6 @@ function onLocationReady() {
 				parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature);
 				console.log(parameterMap);
 				
-				
 				$.ajax({
 				  'url': message.action,
 				  'data': parameterMap,
@@ -161,10 +164,13 @@ function onLocationReady() {
 					//append to autocomplete
 					var html = "";
 					var ul = $( "#autocomplete" );
-					//alert(data);
+					
+					if (data.businesses) { yelpResults = data.businesses; alert("yelpResults: "+yelpResults);}
 					$.each( data.businesses, function ( i,biz ) {		
-						var addr = (biz.location) ? (biz.location): "";
-						html += "<li id='selectedContact"+i+"'><img src='"+biz.image_url+"'/><h2>" +biz.name + "</h2><p id='"+biz.id+"'>"+ addr +"</p><p><img src='"+biz.rating_img_url_small+"'/></p></li>";
+						var addr = (biz.location && biz.location.display_address) ? biz.location.display_address: "";
+						
+						html += "<li id='selectedLoc"+i+"'><a id='"+i+"' ontouchend='selectLocation(this)'><img src='"+biz.image_url+"'/><h2>" +biz.name + "</h2><p id='"+biz.id+"'>"+ addr +"</p><p><img src='"+biz.rating_img_url_small+"'/></p></a></li>";
+						
 					});
 					ul.html( html );
 					ul.listview( "refresh" );
@@ -184,8 +190,52 @@ function onLocationReady() {
 	});
 }
 
+function today() {
+	return new Date().toJSON().slice(0,10);
+}
 
-
+function selectLocation(element) {
+		var ID = element.id;
+		// add contact to selected Div
+		var ldlLocation = createLocation(yelpResults[ID]);
+		ldlLocations.push(ldlLocation);
+		$("#selected").append($(element).parent());
+		
+		//clear form
+		var ul = $("#autocomplete");
+		ul.html("");
+		ul.listview( "refresh" );
+		ul.trigger( "updatelayout");
+		// put focus on form
+			
+	}
+	
+	
+	function submitLocations() {
+		var msg = {locations: JSON.stringify(ldlContacts)};
+		window.postMessage(msg, "*");
+		
+		steroids.modal.hide();
+	} 
+	
+	function createLocation(yelpLocation) {
+		var address = (yelpLocation.location) ? yelpLocation.location.display_address : "";
+		var yelpID = yelpLocation.id;
+		var businessName = yelpLocation.name;
+		var imageurl = yelpLocation.image_url;
+		var phone = yelpLocation.display_phone;
+		var distance = yelpLocation.distance;
+		var url = yelpLocation.url;
+		var newLocation = new Location({
+					yelpID: yelpID,
+					name: businessName, 
+					url: url,
+					address: address,
+					distance: distance,
+					photo: imageurl
+				});
+		return newLocation;
+	}
 
 
     // onSuccess: Get a snapshot of the current contacts
@@ -225,6 +275,8 @@ function onLocationReady() {
 			
 	}
 	
+
+	
 	function createContact(cordovaContact) {
 		var name = (cordovaContact.name) ? cordovaContact.name.formatted:"";
 		var sal = (cordovaContact.name) ? cordovaContact.name.honorificPrefix:"";
@@ -249,9 +301,9 @@ function onLocationReady() {
 	}
     
 	
+
 	function submitContacts() {
-		alert(ldlContacts);
-		var msg = JSON.stringify(ldlContacts);
+		var msg = {contacts: JSON.stringify(ldlContacts)};
 		window.postMessage(msg, "*");
 		
 		steroids.modal.hide();
@@ -260,5 +312,5 @@ function onLocationReady() {
     // onError: Failed to get the contacts
     //
     function onContactError(contactError) {
-        alert('onError!');
+        console.log('onContactError! '+contactError);
     }
