@@ -74,12 +74,11 @@
 		  var locations = JSON.parse(event.data.locations);
 		  
 		  $.each(locations, function ( i,location ) {	
-				html += "<div id='selectedLocation"+i+"'><img src='"+location.id.photo+"'/><h2>" +location.id.name + "</h2><p id='"+location.id.yelpID+"'>"+ location.id.address +"</p></div></br>";
+				html += "<div id='selectedLocation"+i+"'><img src='"+location.photo+"'/><h2>" +location.name + "</h2><p id='"+location.yelpID+"'>"+ location.address +"</p></div></br>";
 			});
 		  
 		  
-		  newDiv.append(html);
-		  $("#selectedlocations").append(newDiv);
+		  $("#selectedlocations").append(html);
 	  }
 	}
 	window.addEventListener("message", receiveMessage, false);
@@ -94,7 +93,7 @@
 		<div>Step 1: When Can you Meet?</div>
 		<div id="date"><input type="date" name="startdate" value="javascript:today()"/>
 		<div id="starttime">Start Time:<input type="time" name="starttime" /></div>
-		<div id="endtime">End Time: <input type="date" name="enddate"/><input type="time" name="endtime" /></div>
+		<div id="endtime">End Time: <input type="time" name="endtime" /></div>
 	</div>
 
 	

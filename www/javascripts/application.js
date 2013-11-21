@@ -165,7 +165,7 @@ function onLocationReady() {
 					var html = "";
 					var ul = $( "#autocomplete" );
 					
-					if (data.businesses) { yelpResults = data.businesses; alert("yelpResults: "+yelpResults);}
+					if (data.businesses) { yelpResults = data.businesses; }
 					$.each( data.businesses, function ( i,biz ) {		
 						var addr = (biz.location && biz.location.display_address) ? biz.location.display_address: "";
 						
@@ -212,7 +212,7 @@ function selectLocation(element) {
 	
 	
 	function submitLocations() {
-		var msg = {locations: JSON.stringify(ldlContacts)};
+		var msg = {locations: JSON.stringify(ldlLocations)};
 		window.postMessage(msg, "*");
 		
 		steroids.modal.hide();
