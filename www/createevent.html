@@ -1,125 +1,130 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf8">
-  <title>Create Event</title>
+	<head>
+		<meta charset="utf8">
+		<title>Create Event</title>
 
-  <link rel="stylesheet" href="stylesheets/bootstrap.css" />
-  <link rel="stylesheet" href="stylesheets/style.css" />
+		<link rel="stylesheet" href="stylesheets/bootstrap.css" />
+		<link rel="stylesheet" href="stylesheets/style.css" />
 
-  <script src="javascripts/onerror.js"></script>
-  <script src="javascripts/console.log.js"></script>
+		<script src="javascripts/onerror.js"></script>
+		<script src="javascripts/console.log.js"></script>
 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script type="text/javascript" src="http://static.stackmob.com/js/stackmob-js-0.9.2-bundled-min.js"></script>
-  <!-- cordova.js is served from localhost to ensure the correct version -->
-  <script src="http://localhost/appgyver/cordova.js"></script>
-  <script src="components/steroids-js/steroids.js"></script>
+		<!-- cordova.js is served from localhost to ensure the correct version -->
+		<script src="http://localhost/cordova.js"></script>
+		<script src="components/steroids-js/steroids.js"></script>
 
-  <script src="javascripts/data.js"></script>
-  <script src="javascripts/application.js"></script>
-  
-  
-  <script type="text/javascript" >
-  
-	  // defining options
-	var options = {
-	  date: new Date(),
-	  mode: 'date'
-	};
-	// calling show() function with options and a result handler
-	//datePicker.show(options, function(date){
-	//  alert("date result " + date);  
-	//});
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="javascripts/stackmob-js-0.9.2-bundled-min.js"></script>
+		<script type="text/javascript" src="javascripts/stackmob-init.js"></script>
+		<script type="text/javascript" src="javascripts/application.js"></script>
 
-  
-	steroids.view.navigationBar.show("Create An Event");
-	var navBarVisible = true;
-	
-	var cancelButton = new steroids.buttons.NavigationBarButton();
-	cancelButton.title = "Cancel";
-	
-	cancelButton.onTap = function() {
-	  window.location = "index.html";
-	};
-	
-	steroids.view.navigationBar.setButtons({
-	  left: [cancelButton]
-	});
-	
-	
-		
-	
-	function receiveMessage(event)
-	{
-	  // Do we trust the sender of this message?  (might be
-	  // different from what we originally opened, for example).
-	  //if (event.origin !== "http://example.org")
-	  //   return;
+		<script type="text/javascript" >
+			steroids.view.navigationBar.show("Create An Event");
+			var navBarVisible = true;
 
-	  //var elem = document.querySelector();
-	  var newDiv = $('<div>');
-	  var html="";
-	  if (event.data.contacts) {
-		  var contacts = JSON.parse(event.data.contacts);
-		  
-		  $.each(contacts, function ( i,contact ) {	
-				html += "<div id='selectedContact"+i+"'><img src='"+contact.id.photo+"'/><h2>" +contact.id.name + "</h2><p id='"+contact.id.phoneID+"'>"+ contact.id.email +"</p></div></br>";
+			var cancelButton = new steroids.buttons.NavigationBarButton();
+			cancelButton.title = "Cancel";
+
+			cancelButton.onTap = function() {
+				window.location = "index.html";
+			};
+
+			steroids.view.navigationBar.setButtons({
+				left : [cancelButton]
 			});
-		  
-		  
-		  newDiv.append(html);
-		  $("#selectedcontacts").append(newDiv);
-	  } else if (event.data.locations) {
-		  var locations = JSON.parse(event.data.locations);
-		  
-		  $.each(locations, function ( i,location ) {	
-				html += "<div id='selectedLocation"+i+"'><img src='"+location.photo+"'/><h2>" +location.name + "</h2><p id='"+location.yelpID+"'>"+ location.address +"</p></div></br>";
-			});
-		  
-		  
-		  $("#selectedlocations").append(html);
-	  }
-	}
-	window.addEventListener("message", receiveMessage, false);
 
-  
-  </script>
-</head>
-<body onload="ldlonload()">
+			function receiveMessage(event) {
+				// Do we trust the sender of this message?  (might be
+				// different from what we originally opened, for example).
+				//if (event.origin !== "http://example.org")
+				//   return;
 
+				//var elem = document.querySelector();
+				var newDiv = $('<div>');
+				var html = "";
+				if (event.data) {
+					if (window.localStorage.getItem('sessionContacts'))
+					{
+						var sessionContacts = JSON.parse(window.localStorage.getItem('sessionContacts'));
+						$.each(sessionContacts, function(i, contact) {
+							html += "<div id='selectedContact" + i + "'><h2>" + contact.name + "</h2><p id='" + contact.phoneid + "'>" + contact.email[0] + "</p></div></br>";
+						});
+					}
 
-    <div id="datetime">
-		<div>Step 1: When Can you Meet?</div>
-		<div id="date"><input type="date" name="startdate" value="javascript:today()"/>
-		<div id="starttime">Start Time:<input type="time" name="starttime" /></div>
-		<div id="endtime">End Time: <input type="time" name="endtime" /></div>
-	</div>
+					newDiv.append(html);
+					$("#selectedcontacts").append(newDiv);
+				} else if (event.data.locations) {
+					// Persist the passed locations.
+					window.localStorage.setItem("pLocations", event.data.locations);
+					
+					// Reconstitute and display passed locations.
+					var locations = JSON.parse(event.data.locations);
 
-	
-    <div id="attendees">
-		<div>Step 2: Add Friends/Associates</div>
-		<div id="searchcontacts"><a class="btn" ontouchend="showModal('contacts.html')">Add Contacts</a></div>
-		<div id="selectedcontacts"></div>		
-	</div>
+					$.each(locations, function(i, location) {
+						html += "<div id='selectedLocation" + i + "'><img src='" + location.photo + "'/><h2>" + location.name + "</h2><p id='" + location.yelpID + "'>" + location.address + "</p></div></br>";
+					});
 
-	
-    <div id="locations">
-		<div>Step 3: Add Locations</div>
-		<div id="searchcontacts"><a class="btn" ontouchend="showModal('locations.html')">Add Locations</a></div>
-		<div id="selectedlocations"></div>		
-	</div>
-
-	
-    <div id="comment"><br/><br/></div>
-	
-	 <div id="datadiv" ></div>
-	
-    <div id="actions">
-		<div id="schedule"><a class="btn call-to-action" ontouchend="scheduleEvent()">Schedule</a></div>		
-	</div>
+					$("#selectedlocations").append(html);
+				}
+			}
 
 
-  </div>
-</body>
+			window.addEventListener("message", receiveMessage, false);
+
+		</script>
+	</head>
+	<body>
+
+		<div id="datetime">
+			<div>
+				Step 1: When Can you Meet?
+			</div>
+			<div id="datediv">
+				<input type="date" id='startdate' name="startdate" value="javascript:today()"/>
+				<div id="stimediv">
+					Start Time:
+					<input type="time" id="starttime" name="starttime" />
+				</div>
+				<div id="etimediv">
+					End Time:
+					<input type="time" id="endtime" name="endtime" />
+				</div>
+			</div>
+
+			<div id="attendees">
+				<div>
+					Step 2: Add Friends/Associates
+				</div>
+				<div id="searchcontacts">
+					<a class="btn" ontouchend="showModal('contacts.html')">Add Contacts</a>
+				</div>
+				<div id="selectedcontacts"></div>
+			</div>
+
+			<div id="locations">
+				<div>
+					Step 3: Add Locations
+				</div>
+				<div id="searchcontacts">
+					<a class="btn" ontouchend="showModal('locations.html')">Add Locations</a>
+				</div>
+				<div id="selectedlocations"></div>
+			</div>
+
+			<div id="comment">
+				<br/>
+				<br/>
+			</div>
+
+			<div id="datadiv" ></div>
+
+			<div id="actions">
+				<div id="schedule">
+					<a class="btn call-to-action" ontouchend="scheduleEvent()">Schedule</a>
+				</div>
+			</div>
+
+		</div>
+	</body>
 </html>
